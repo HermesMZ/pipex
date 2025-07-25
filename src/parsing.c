@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/25 16:21:06 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/07/25 16:36:37 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	check_files_rights(t_pipex *pipex)
 			| O_TRUNC, 0644);
 	if (pipex->outfile_fd < 0)
 		return (free_pipex(pipex), -2);
+	ft_printf("Rights OK\n");
 	return (0);
 }
 
@@ -53,6 +54,7 @@ int	check_commands(t_pipex *pipex)
 		}
 		i++;
 	}
+	ft_printf("All commands are accessible and executable\n");
 	return (0);
 }
 
@@ -79,6 +81,7 @@ int	parse_one_command(char *cmd, char ***cmds, int index)
 	if (!args)
 		return (-1);
 	cmds[index] = args;
+	ft_printf("Command %d parsed: %s\n", index + 1, cmds[index][0]);
 	return (0);
 }
 
