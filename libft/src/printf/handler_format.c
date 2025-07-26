@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   format_handlers.c                                  :+:      :+:    :+:   */
+/*   handler_format.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:22:53 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/15 16:23:49 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	handle_char(t_element *element)
 	int				printed;
 
 	char_to_print = (unsigned char)(long)element->content;
-	if (element->specifier == '%')
+	if (element->spec == '%')
 		element->width = 0;
 	char_str = malloc(sizeof(char) * 2);
 	if (!char_str)
@@ -57,7 +57,7 @@ int	handle_hex(t_element *element)
 	hex_str = ft_utohex(value);
 	if (!hex_str)
 		return (-1);
-	if (element->specifier == 'X')
+	if (element->spec == 'X')
 	{
 		upper_hex_str = ft_toupper_string(hex_str);
 		free(hex_str);
@@ -97,7 +97,7 @@ int	handle_str(t_element *element)
 	str = (char *)element->content;
 	formatted_str = str;
 	printed = 0;
-	if (element->specifier == 'c' && str[0] == '\0')
+	if (element->spec == 'c' && str[0] == '\0')
 		return (handle_null_char_with_padding(element));
 	if (has_option(element))
 	{
@@ -106,7 +106,7 @@ int	handle_str(t_element *element)
 			return (-1);
 		len = ft_strlen(formatted_str);
 		printed += write(1, formatted_str, len);
-		if (element->specifier == 'c' && formatted_str[0] == '\0')
+		if (element->spec == 'c' && formatted_str[0] == '\0')
 			printed += write(1, "\0", 1);
 	}
 	else

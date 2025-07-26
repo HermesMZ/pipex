@@ -66,7 +66,7 @@ SRCS_PRINTF := \
     handler_precision_nbr.c \
     handler_utils.c \
     parsing_options.c \
-    parsing_specifiers.c \
+    parsing_specs.c \
     parsing.c
 
 SRCS_PUT := \

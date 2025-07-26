@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:13:46 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/25 16:01:48 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 22:54:46 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
+
+// debug
+# include <stdio.h>
+// debug
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -23,6 +27,7 @@
 
 typedef struct s_pipex
 {
+	char	**path;
 	char	*infile;
 	char	***cmds;
 	char	*outfile;
@@ -30,11 +35,11 @@ typedef struct s_pipex
 	int		outfile_fd;
 }	t_pipex;
 
-int		pipex(int argc, char *argv[]);
-t_pipex	*init_pipex(t_pipex *pipex);
+int		pipex(t_pipex *pipex);
+t_pipex	*init_pipex(t_pipex *pipex, char *envp[]);
 char	***init_cmds(int cmd_count);
 
-int		parse_args(int argc, char *argv[], t_pipex *pipex);
+int		parse_args(t_pipex *pipex, int argc, char *argv[]);
 
 void	free_pipex(t_pipex *pipex);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler_padding.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 01:02:16 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/22 01:02:20 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ char	*apply_padding_width(t_element *element, char *str, char padding_char)
 {
 	int		str_len;
 
-	if (element->specifier == 'c' && str[0] == '\0')
+	if (element->spec == 'c' && str[0] == '\0')
 		str_len = 1;
 	else
 		str_len = ft_strlen(str);
 	if (element->width <= str_len)
 		return (str);
-	if (element->has_minus && (element->specifier != 'c' || str[0] != '\0'))
+	if (element->has_minus && (element->spec != 'c' || str[0] != '\0'))
 		return (pad_right(str, element->width, padding_char, str_len));
 	else
 		return (pad_left(str, element->width, padding_char, str_len));

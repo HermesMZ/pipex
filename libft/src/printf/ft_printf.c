@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:14:50 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/26 17:09:22 by zoum             ###   ########.fr       */
+/*   Updated: 2025/07/26 23:05:11 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@ static void	free_elements(t_element **elements)
 	{
 		while (elements[i] != NULL)
 		{
-			if (elements[i]->content && (elements[i]->specifier == 's'
-					|| elements[i]->specifier == 'c'
-					|| elements[i]->specifier == 'p'))
+			if (elements[i]->content && (elements[i]->spec == 's'
+					|| elements[i]->spec == 'c' || elements[i]->spec == 'p'
+					|| elements[i]->spec == 'd' || elements[i]->spec == 'i'
+					|| elements[i]->spec == 'u' || elements[i]->spec == 'x'
+					|| elements[i]->spec == 'X'))
 			{
 				free(elements[i]->content);
 				elements[i]->content = NULL;

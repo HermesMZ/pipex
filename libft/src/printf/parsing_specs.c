@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_specifiers.c                               :+:      :+:    :+:   */
+/*   parsing_specs.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,10 +12,10 @@
 
 #include "ft_printf.h"
 
-static t_element	*specifier_parsing_simple(const char format_char,
+static t_element	*spec_parsing_simple(const char format_char,
 	va_list al, t_element *element)
 {
-	element->specifier = format_char;
+	element->spec = format_char;
 	if (format_char == 'c')
 		element->content = (void *)(long)(unsigned char)va_arg(al, int);
 	else if (format_char == 'd' || format_char == 'i')
@@ -32,11 +32,11 @@ static t_element	*specifier_parsing_simple(const char format_char,
 	return (element);
 }
 
-static t_element	*specifier_parsing_string(va_list al, t_element *element)
+static t_element	*spec_parsing_string(va_list al, t_element *element)
 {
 	char	*tmp;
 
-	element->specifier = 's';
+	element->spec = 's';
 	tmp = va_arg(al, char *);
 	if (!tmp)
 		element->content = ft_strdup("(null)");
@@ -47,13 +47,13 @@ static t_element	*specifier_parsing_string(va_list al, t_element *element)
 	return (element);
 }
 
-static t_element	*specifier_parsing(const char *format, va_list al,
+static t_element	*spec_parsing(const char *format, va_list al,
 	t_element *element)
 {
 	if (*format == 's')
-		return (specifier_parsing_string(al, element));
+		return (spec_parsing_string(al, element));
 	else
-		return (specifier_parsing_simple(*format, al, element));
+		return (spec_parsing_simple(*format, al, element));
 }
 
 size_t	arg_parsing(const char *format, t_element **elements,
@@ -67,9 +67,9 @@ size_t	arg_parsing(const char *format, t_element **elements,
 	if (!element)
 		return (0);
 	i += flag_parsing(&format[i], element);
-	if (is_specifier(format[i]))
+	if (is_spec(format[i]))
 	{
-		element = specifier_parsing(&format[i], al, element);
+		element = spec_parsing(&format[i], al, element);
 		i++;
 	}
 	elements[*j] = element;

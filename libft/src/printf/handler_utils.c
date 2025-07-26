@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   handler_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 20:10:28 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/17 20:10:31 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static t_handler	find_format_handler(char specifier)
+static t_handler	find_format_handler(char spec)
 {
 	const t_format	g_format_handlers[] = {
 	{'c', handle_char},
@@ -28,9 +28,9 @@ static t_handler	find_format_handler(char specifier)
 	};
 	const t_format	*current = g_format_handlers;
 
-	while (current->specifier != '\0')
+	while (current->spec != '\0')
 	{
-		if (current->specifier == specifier)
+		if (current->spec == spec)
 		{
 			return (current->handler);
 		}
@@ -47,7 +47,7 @@ void	format_finder(t_element **elements)
 	while (elements[i])
 	{
 		if (elements[i]->handler == NULL)
-			elements[i]->handler = find_format_handler(elements[i]->specifier);
+			elements[i]->handler = find_format_handler(elements[i]->spec);
 		i++;
 	}
 }
@@ -66,9 +66,9 @@ char	get_padding_char(t_element *element)
 	padding_char = ' ';
 	if (element->has_zero && !element->has_minus)
 	{
-		if (element->specifier == 'd' || element->specifier == 'i'
-			|| element->specifier == 'u' || element->specifier == 'x'
-			|| element->specifier == 'X' || element->specifier == 'p')
+		if (element->spec == 'd' || element->spec == 'i'
+			|| element->spec == 'u' || element->spec == 'x'
+			|| element->spec == 'X' || element->spec == 'p')
 		{
 			if (element->precision == -1)
 				padding_char = '0';

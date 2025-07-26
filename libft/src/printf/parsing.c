@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 17:11:57 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/15 17:12:00 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static size_t	hard_text(const char *format, t_element **elements, size_t *j)
 	element = new_empty_element();
 	if (!element)
 		return (0);
-	element->specifier = 's';
+	element->spec = 's';
 	element->handler = NULL;
 	while (format[size] != '\0' && format[size] != '%')
 		size++;

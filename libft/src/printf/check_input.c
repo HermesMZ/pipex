@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_and_count.c                                  :+:      :+:    :+:   */
+/*   check_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 02:30:35 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/15 02:30:41 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	validate_flags_spec(const char *format)
 		while (ft_isdigit(format[i]))
 			i++;
 	}
-	if (is_specifier(format[i]))
+	if (is_spec(format[i]))
 		return (i + 1);
 	else
 		return (0);
@@ -38,7 +38,7 @@ static int	validate_flags_spec(const char *format)
 int	validate_format_string(const char *format)
 {
 	size_t	i;
-	int		specifier_len;
+	int		spec_len;
 
 	i = 0;
 	while (format[i] != '\0')
@@ -52,9 +52,9 @@ int	validate_format_string(const char *format)
 			}
 			if (format[i] == '\0')
 				return (-1);
-			specifier_len = validate_flags_spec(&format[i]);
-			if (specifier_len > 0)
-				i += specifier_len;
+			spec_len = validate_flags_spec(&format[i]);
+			if (spec_len > 0)
+				i += spec_len;
 			else
 				return (-1);
 		}

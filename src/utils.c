@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:29:58 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/25 16:19:11 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:11:59 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ void	free_pipex(t_pipex *pipex)
 	{
 		free(pipex->outfile);
 		pipex->outfile = NULL;
+	}
+	if (pipex->path)
+	{
+		free_splitted(pipex->path);
+		pipex->path = NULL;
 	}
 	if (pipex->cmds)
 	{

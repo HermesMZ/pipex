@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler_options.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 00:28:14 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/18 00:28:16 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ static char	*apply_xhash(t_element *element, char *str)
 	if (!new_str)
 		return (NULL);
 	new_str[0] = '0';
-	if (element->specifier == 'x')
+	if (element->spec == 'x')
 		new_str[1] = 'x';
-	else if (element->specifier == 'X')
+	else if (element->spec == 'X')
 		new_str[1] = 'X';
 	ft_memcpy(&new_str[2], str, str_len);
 	new_str[str_len + 2] = '\0';
@@ -38,7 +38,7 @@ static char	*apply_plus(t_element *element, char *str)
 	int		str_len;
 
 	str_len = ft_strlen(str);
-	if (str[0] != '-' && ft_strchr("di", element->specifier))
+	if (str[0] != '-' && ft_strchr("di", element->spec))
 	{
 		new_str = malloc(sizeof(char) * (str_len + 2));
 		if (!new_str)
@@ -59,7 +59,7 @@ static char	*apply_space(t_element *element, char *str)
 	int		str_len;
 
 	str_len = ft_strlen(str);
-	if (str[0] != '-' && str[0] != '+' && ft_strchr("di", element->specifier))
+	if (str[0] != '-' && str[0] != '+' && ft_strchr("di", element->spec))
 	{
 		new_str = malloc(sizeof(char) * (str_len + 2));
 		if (!new_str)
@@ -80,8 +80,8 @@ static char	*apply_flags(t_element *element, char *str)
 		str = apply_plus(element, str);
 	if (element->has_space)
 		str = apply_space(element, str);
-	if (element->has_hash && (element->specifier == 'x'
-			|| element->specifier == 'X') && str[0] != '0')
+	if (element->has_hash && (element->spec == 'x'
+			|| element->spec == 'X') && str[0] != '0')
 		str = apply_xhash(element, str);
 	return (str);
 }
@@ -93,7 +93,7 @@ char	*handle_options(t_element *element)
 	char	padding_char;
 
 	original_str = (char *)element->content;
-	if (element->specifier == 's' && ft_strncmp(original_str, "(null)", 6) == 0)
+	if (element->spec == 's' && ft_strncmp(original_str, "(null)", 6) == 0)
 		formatted_str = handle_null_string(element, original_str);
 	else
 		formatted_str = original_str;

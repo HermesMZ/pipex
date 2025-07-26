@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handler_precision.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:41:30 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/20 23:41:32 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ char	*apply_precision(t_element *element, char *str)
 {
 	char	*result;
 
-	if (element->specifier == 's' || element->specifier == 'c')
+	if (element->spec == 's' || element->spec == 'c')
 	{
-		if (element->specifier == 'c' && element->precision == 0)
+		if (element->spec == 'c' && element->precision == 0)
 			element->precision = -1;
-		if (element->specifier == 's' && element->precision == 0)
+		if (element->spec == 's' && element->precision == 0)
 		{
 			free(str);
 			return (ft_strdup(""));
@@ -62,9 +62,9 @@ char	*apply_precision(t_element *element, char *str)
 		else
 			result = apply_precision_str(element, str);
 	}
-	else if (element->specifier == 'd' || element->specifier == 'i'
-		|| element->specifier == 'u' || element->specifier == 'x'
-		|| element->specifier == 'X' || element->specifier == 'p')
+	else if (element->spec == 'd' || element->spec == 'i'
+		|| element->spec == 'u' || element->spec == 'x'
+		|| element->spec == 'X' || element->spec == 'p')
 		result = apply_precision_nbr(element, str);
 	else
 		result = ft_strdup(str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:07:41 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/06/11 16:57:31 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_element	t_element;
 
 typedef struct s_element
 {
-	char	specifier;
+	char	spec;
 	int		(*handler)(t_element *);
 	void	*content;
 	int		has_minus;
@@ -39,7 +39,7 @@ typedef int					(*t_handler)(t_element *);
 
 typedef struct s_format
 {
-	char		specifier;
+	char		spec;
 	t_handler	handler;
 }	t_format;
 
@@ -75,7 +75,7 @@ int			handle_null_char_with_padding(t_element *element);
 char		*handle_null_string(t_element *element, char *str);
 
 //utils
-int			is_specifier(char c);
+int			is_spec(char c);
 int			is_flag(char c);
 int			has_option(t_element *element);
 char		get_padding_char(t_element *element);

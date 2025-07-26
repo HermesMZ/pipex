@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:34 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/25 15:51:30 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:00:06 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,8 @@
 // 5. creer un pipe
 // 6. envoyer le résultat de la dernière commande dans outfile
 
-int	pipex(int argc, char *argv[])
+int	pipex(t_pipex *pipex)
 {
-	t_pipex	*pipex;
-
-	pipex = NULL;
-	pipex = init_pipex(pipex);
-	if (!pipex)
-		return (ft_putstr_fd("Error: Memory allocation failed\n", 2), -1);
-	if (parse_args(argc, argv, pipex) == -1)
-		return (-1);
+	printf("Infile: %s\n", pipex->infile);
 	return (0);
 }

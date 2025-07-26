@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 19:45:36 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/22 00:53:30 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:04:49 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	is_specifier(char c)
+int	is_spec(char c)
 {
-	char	*specifiers;
+	char	*specs;
 
-	specifiers = "cspdiuxX%";
-	return (ft_strchr(specifiers, c) != NULL);
+	specs = "cspdiuxX%";
+	return (ft_strchr(specs, c) != NULL);
 }
 
 int	is_flag(char c)
@@ -35,7 +35,7 @@ t_element	*new_empty_element(void)
 	element = malloc(sizeof(t_element));
 	if (!element)
 		return (NULL);
-	element->specifier = 0;
+	element->spec = 0;
 	element->handler = NULL;
 	element->content = NULL;
 	element->has_minus = 0;
