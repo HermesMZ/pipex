@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/26 22:38:21 by zoum             ###   ########.fr       */
+/*   Updated: 2025/07/27 00:17:28 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +15,30 @@
 void	get_paths_from_envp(t_pipex *pipex, char *envp[])
 {
 	int		i;
-	char	*path_env;
 
-	ft_printf("DEBUG: get_paths_from_envp called\n");
-	path_env = NULL;
-	i = 0;
+	pipex->path = NULL;
 	if (!envp)
-	{
-		ft_printf("DEBUG: envp is NULL!\n");
-		pipex->path = NULL;
 		return ;
-	}
+	i = 0;
 	while (envp[i])
 	{
-		ft_printf("DEBUG: checking envp[%d]: %.20s...\n", i, envp[i]);
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
-			ft_printf("DEBUG: Found PATH at envp[%d]: %s\n", i, envp[i]);
-			path_env = envp[i] + 5;
-			break ;
+			pipex->path = ft_split(envp[i] + 5, ':');
+			return ;
 		}
 		i++;
 	}
-	if (!path_env)
-	{
-		ft_putstr_fd("Error: PATH not found in envp\n", 2);
-		pipex->path = NULL;
-		return ;
-	}
-	ft_printf("DEBUG: About to split PATH: %.50s...\n", path_env);
-	pipex->path = ft_split(path_env, ':');
-	if (!pipex->path)
-		ft_putstr_fd("Error: Failed to split PATH\n", 2);
-	else
-		ft_printf("DEBUG: PATH split successfully, first path: %s\n", pipex->path[0]);
 }
 
 t_pipex	*init_pipex(t_pipex *pipex, char *envp[])
 {
-	ft_printf("Initializing pipex structure\n");
 	pipex = malloc(sizeof(t_pipex));
 	if (!pipex)
 		return (NULL);
 	*pipex = (t_pipex){0};
+	pipex->infile = NULL;
+	pipex->outfile = NULL;
 	pipex->infile_fd = -1;
 	pipex->outfile_fd = -1;
 	get_paths_from_envp(pipex, envp);
@@ -69,7 +50,6 @@ char	***init_cmds(int cmd_count)
 	char	***cmds;
 	int		i;
 
-	ft_printf("Initializing commands array with %d commands\n", cmd_count);
 	cmds = malloc(sizeof(char **) * (cmd_count + 1));
 	if (!cmds)
 		return (NULL);

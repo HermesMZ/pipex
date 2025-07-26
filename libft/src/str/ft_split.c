@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 23:18:25 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/07/16 17:22:20 by zoum             ###   ########.fr       */
+/*   Updated: 2025/07/27 00:04:06 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	free_splitted(char **splitted)
 {
 	int	i;
 
+	if (!splitted)
+		return ;
 	i = 0;
 	while (splitted[i])
 	{

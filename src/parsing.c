@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/26 23:15:43 by zoum             ###   ########.fr       */
+/*   Updated: 2025/07/27 00:21:46 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,16 @@
 
 int	check_files_rights(t_pipex *pipex)
 {
-	ft_printf("Checking rights for infile: %s and outfile: %s\n",
-		pipex->infile, pipex->outfile);
 	if (access(pipex->infile, F_OK | R_OK) == -1
 		|| access(pipex->outfile, F_OK | W_OK) == -1)
 		return (ft_putstr_fd("Error: Cannot access files\n", 1), -2);
 	pipex->infile_fd = open(pipex->infile, O_RDONLY);
 	if (pipex->infile_fd < 0)
-		return (free_pipex(pipex), -2);
+		return (-2);
 	pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
 			| O_TRUNC, 0644);
 	if (pipex->outfile_fd < 0)
-		return (free_pipex(pipex), -2);
-	ft_printf("Rights OK\n");
+		return (-2);
 	return (0);
 }
 
@@ -56,7 +53,7 @@ int	check_command(t_pipex *pipex, char *cmd, int index)
 	char	*full_path;
 
 	if (!cmd || !pipex || !pipex->path)
-		return (ft_printf("Error: check_command"), -1);
+		return (-1);
 	if (ft_strchr(cmd, '/') != NULL && access(cmd, F_OK | X_OK) == 0)
 	{
 		free(pipex->cmds[index][0]);
@@ -74,7 +71,6 @@ int	check_command(t_pipex *pipex, char *cmd, int index)
 			return (0);
 		}
 	}
-	ft_printf("Command not found: %s\n", cmd);
 	return (-1);
 }
 
@@ -82,7 +78,6 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 {
 	char	**args;
 
-	ft_printf("Parsing command: %s\n", cmd);
 	if (index < 0 || !cmds || !cmd)
 		return (-1);
 	args = NULL;
@@ -103,7 +98,6 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 	cmds[index] = args;
 	if (check_command(pipex, args[0], index) < 0)
 		return (-1);
-	ft_printf("Command %d parsed: %s\n", index + 1, cmds[index][0]);
 	return (0);
 }
 
@@ -111,7 +105,6 @@ int	parse_args(t_pipex *pipex, int argc, char *argv[])
 {
 	int	i;
 
-	ft_printf("Parsing arguments\n");
 	i = 0;
 	pipex->infile = ft_strdup(argv[1]);
 	if (!pipex->infile)
@@ -128,7 +121,7 @@ int	parse_args(t_pipex *pipex, int argc, char *argv[])
 			return (-1);
 		i++;
 	}
-	print_pipex_info(pipex);
+	// print_pipex_info(pipex); // debug
 	if (check_files_rights(pipex) < 0)
 		return (-1);
 	return (0);

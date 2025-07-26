@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:29:58 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/26 23:11:59 by zoum             ###   ########.fr       */
+/*   Updated: 2025/07/27 00:24:32 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,13 @@ void	free_pipex(t_pipex *pipex)
 	if (!pipex)
 		return ;
 	if (pipex->infile)
-	{
 		free(pipex->infile);
-		pipex->infile = NULL;
-	}
 	if (pipex->outfile)
-	{
 		free(pipex->outfile);
-		pipex->outfile = NULL;
-	}
 	if (pipex->path)
-	{
 		free_splitted(pipex->path);
-		pipex->path = NULL;
-	}
 	if (pipex->cmds)
-	{
 		ft_free_tab(pipex->cmds);
-		pipex->cmds = NULL;
-	}
 	if (pipex)
 	{
 		close_fds(pipex);

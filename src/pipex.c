@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:34 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/26 23:00:06 by zoum             ###   ########.fr       */
+/*   Updated: 2025/07/27 00:25:04 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@
 
 int	pipex(t_pipex *pipex)
 {
-	printf("Infile: %s\n", pipex->infile);
+	if (!pipex || !pipex->infile)
+		return (-1);
 	return (0);
 }
