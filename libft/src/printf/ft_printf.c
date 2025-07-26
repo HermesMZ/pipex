@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 12:14:50 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/05/06 12:14:53 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 17:09:22 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ static void	free_elements(t_element **elements)
 	{
 		while (elements[i] != NULL)
 		{
-			if (elements[i]->content)
+			if (elements[i]->content && (elements[i]->specifier == 's'
+					|| elements[i]->specifier == 'c'
+					|| elements[i]->specifier == 'p'))
 			{
 				free(elements[i]->content);
 				elements[i]->content = NULL;
@@ -50,14 +52,22 @@ static size_t	print_elements(t_element **elements)
 	size_t	total_printed;
 	size_t	i;
 	size_t	total_elements;
+	int		printed;
 
+	printed = 0;
 	i = 0;
 	total_printed = 0;
 	total_elements = elements_count(elements);
 	while (i < total_elements)
 	{
 		if (elements[i]->handler)
-			total_printed += elements[i]->handler(elements[i]);
+		{
+			printed = elements[i]->handler(elements[i]);
+			if (printed >= 0)
+				total_printed += printed;
+			else
+				return (-1);
+		}
 		i++;
 	}
 	return (total_printed);

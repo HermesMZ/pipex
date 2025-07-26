@@ -3,3 +3,4 @@ objs/
 obj/
 # libft/
 pipex
+libft/libft.a

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_lib2.c                                        :+:      :+:    :+:   */
+/*   ft_itoa_ll.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: MZimeris <MZimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 20:14:40 by MZimeris          #+#    #+#             */
-/*   Updated: 2025/05/17 20:14:43 by MZimeris         ###   ########.fr       */
+/*   Updated: 2025/07/26 16:44:59 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_itoa_ll(long long n)
 	i = 0;
 	nb = n;
 	result_size = ft_digits_count_ll(nb);
-	result = (char *)malloc(sizeof(char) * result_size + 1);
+	result = (char *)malloc(sizeof(char) * (result_size + 1));
 	if (!result)
 		return (NULL);
 	if (nb < 0)
