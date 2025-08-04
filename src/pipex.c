@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:34 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/04 17:51:52 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/04 18:14:27 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 		dup2(pipex->outfile_fd, STDOUT_FILENO);
 		close(pipex->outfile_fd);
 	}
-
 	execve(pipex->cmds[i][0], pipex->cmds[i], NULL);
 	perror("execve");
 	exit(1);

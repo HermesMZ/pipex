@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/27 00:21:46 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/04 18:14:12 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 int	check_files_rights(t_pipex *pipex)
 {
-	if (access(pipex->infile, F_OK | R_OK) == -1
-		|| access(pipex->outfile, F_OK | W_OK) == -1)
+	if (access(pipex->infile, F_OK | R_OK) == -1)
 		return (ft_putstr_fd("Error: Cannot access files\n", 1), -2);
 	pipex->infile_fd = open(pipex->infile, O_RDONLY);
 	if (pipex->infile_fd < 0)
 		return (-2);
-	pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
-			| O_TRUNC, 0644);
+	if (access(pipex->outfile, F_OK == -1))
+		pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
+				| O_TRUNC, 0644);
+	if (access(pipex->outfile, W_OK) == -1)
+		return (-2);
 	if (pipex->outfile_fd < 0)
 		return (-2);
 	return (0);
@@ -121,7 +123,6 @@ int	parse_args(t_pipex *pipex, int argc, char *argv[])
 			return (-1);
 		i++;
 	}
-	// print_pipex_info(pipex); // debug
 	if (check_files_rights(pipex) < 0)
 		return (-1);
 	return (0);

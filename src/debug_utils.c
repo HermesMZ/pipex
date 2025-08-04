@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 16:00:06 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/04 10:40:13 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/04 18:13:48 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	debug_argv(int argc, char *argv[])
 		ft_putstr_fd("Debug Argv: NULL\n", 2);
 	ft_printf("End of Debug Argv\n\n");
 }
-
 
 void	debug_print_pipex_info(t_pipex *pipex)
 {
