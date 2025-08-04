@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/27 00:17:28 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/04 10:23:58 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,3 +62,4 @@ char	***init_cmds(int cmd_count)
 	cmds[cmd_count] = NULL;
 	return (cmds);
 }
+
