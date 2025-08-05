@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:29:58 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/27 00:24:32 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/05 10:19:19 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@ void	ft_free_tab(char ***tab)
 	i = 0;
 	while (tab[i])
 	{
-		j = 0;
-		while (tab[i][j])
-			free(tab[i][j++]);
-		free(tab[i]);
+		if (tab[i])
+		{
+			j = 0;
+			while (tab[i][j])
+				free(tab[i][j++]);
+			free(tab[i]);
+		}
 		i++;
 	}
 	free(tab);
@@ -51,10 +54,6 @@ void	free_pipex(t_pipex *pipex)
 		free_splitted(pipex->path);
 	if (pipex->cmds)
 		ft_free_tab(pipex->cmds);
-	if (pipex)
-	{
-		close_fds(pipex);
-		free(pipex);
-		pipex = NULL;
-	}
+	close_fds(pipex);
+	free(pipex);
 }

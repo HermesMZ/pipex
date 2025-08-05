@@ -6,17 +6,14 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:13:46 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/04 10:39:16 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 10:37:32 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-// debug
 # include <stdio.h>
-// debug
-
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
@@ -28,6 +25,7 @@
 typedef struct s_pipex
 {
 	char	**path;
+	char	**envp;
 	char	*infile;
 	char	***cmds;
 	char	*outfile;

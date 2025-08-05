@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/04 18:13:57 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 10:11:41 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_pipex	*init_pipex(t_pipex *pipex, char *envp[])
 	pipex->outfile = NULL;
 	pipex->infile_fd = -1;
 	pipex->outfile_fd = -1;
+	pipex->envp = envp;
 	get_paths_from_envp(pipex, envp);
 	return (pipex);
 }

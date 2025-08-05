@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/04 18:14:12 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 10:33:02 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,19 @@
 
 int	check_files_rights(t_pipex *pipex)
 {
-	if (access(pipex->infile, F_OK | R_OK) == -1)
-		return (ft_putstr_fd("Error: Cannot access files\n", 1), -2);
 	pipex->infile_fd = open(pipex->infile, O_RDONLY);
 	if (pipex->infile_fd < 0)
-		return (-2);
-	if (access(pipex->outfile, F_OK == -1))
-		pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
-				| O_TRUNC, 0644);
-	if (access(pipex->outfile, W_OK) == -1)
-		return (-2);
+	{
+		perror(pipex->infile);
+		pipex->infile_fd = -1;
+	}
+	pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
+			| O_TRUNC, 0644);
 	if (pipex->outfile_fd < 0)
+	{
+		perror(pipex->outfile);
 		return (-2);
+	}
 	return (0);
 }
 
@@ -80,7 +81,7 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 {
 	char	**args;
 
-	if (index < 0 || !cmds || !cmd)
+	if (index < 0 || !cmds || !cmd || !*cmd)
 		return (-1);
 	args = NULL;
 	if (ft_strchr(cmd, ' ') == NULL)
@@ -98,8 +99,7 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 	if (!args)
 		return (-1);
 	cmds[index] = args;
-	if (check_command(pipex, args[0], index) < 0)
-		return (-1);
+	check_command(pipex, args[0], index);
 	return (0);
 }
 
