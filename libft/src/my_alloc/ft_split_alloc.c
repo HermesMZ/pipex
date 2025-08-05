@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 14:00:00 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 14:00:13 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 15:45:36 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,26 @@ static char	*create_word(t_lalloc *allocator, char const *s, int start, int end)
 	return (word);
 }
 
-char	**ft_split_alloc(t_lalloc *allocator, char const *s, char c)
+static int	skip_separators_and_find_word(char const *s, int *i, char c)
+{
+	int	start;
+
+	while (s[*i] && s[*i] == c)
+		(*i)++;
+	start = *i;
+	while (s[*i] && s[*i] != c)
+		(*i)++;
+	return (start);
+}
+
+static char	**fill_words(t_lalloc *allocator, char const *s, char c,
+		int word_count)
 {
 	char	**result;
-	int		word_count;
 	int		i;
 	int		start;
 	int		word_index;
 
-	if (!s || !allocator)
-		return (NULL);
-	word_count = count_words(s, c);
 	result = ft_my_malloc(allocator, (word_count + 1) * sizeof(char *));
 	if (!result)
 		return (NULL);
@@ -71,11 +80,7 @@ char	**ft_split_alloc(t_lalloc *allocator, char const *s, char c)
 	word_index = 0;
 	while (s[i] && word_index < word_count)
 	{
-		while (s[i] && s[i] == c)
-			i++;
-		start = i;
-		while (s[i] && s[i] != c)
-			i++;
+		start = skip_separators_and_find_word(s, &i, c);
 		if (i > start)
 		{
 			result[word_index] = create_word(allocator, s, start, i);
@@ -86,4 +91,14 @@ char	**ft_split_alloc(t_lalloc *allocator, char const *s, char c)
 	}
 	result[word_index] = NULL;
 	return (result);
+}
+
+char	**ft_split_alloc(t_lalloc *allocator, char const *s, char c)
+{
+	int	word_count;
+
+	if (!s || !allocator)
+		return (NULL);
+	word_count = count_words(s, c);
+	return (fill_words(allocator, s, c, word_count));
 }

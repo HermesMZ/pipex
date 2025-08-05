@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 14:15:08 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:31:37 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 	if (!args)
 		return (-1);
 	cmds[index] = args;
-	return (check_command(pipex, args[0], index));
+	return (0);
 }
 
 int	parse_args(t_pipex *pipex, int argc, char *argv[])

@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:13:46 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 13:13:55 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:31:39 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_pipex	*init_pipex(t_pipex *pipex, char *envp[]);
 char	***init_cmds(t_lalloc *allocator, int cmd_count);
 
 int		parse_args(t_pipex *pipex, int argc, char *argv[]);
+int		check_command(t_pipex *pipex, char *cmd, int index);
 
 void	free_pipex(t_pipex *pipex);
 
