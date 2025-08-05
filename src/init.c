@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 14:05:22 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:33:32 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,9 @@ t_pipex	*init_pipex(t_pipex *pipex, char *envp[])
 	pipex->cmds = NULL;
 	pipex->path = NULL;
 	pipex->envp = envp;
-	pipex->allocator = malloc(sizeof(t_lalloc));
+	pipex->allocator = init_allocator();
 	if (!pipex->allocator)
-	{
-		free(pipex);
 		return (NULL);
-	}
-	pipex->allocator->head = NULL;
-	pipex->allocator->total_allocated = 0;
-	pipex->allocator->total_freed = 0;
 	get_paths_from_envp(pipex, envp);
 	return (pipex);
 }

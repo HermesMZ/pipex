@@ -1,40 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_my_free_all.c                                   :+:      :+:    :+:   */
+/*   ft_init_allocator.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 12:58:47 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 16:33:35 by mzimeris         ###   ########.fr       */
+/*   Created: 2025/08/05 16:11:50 by mzimeris          #+#    #+#             */
+/*   Updated: 2025/08/05 16:33:29 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_my_alloc.h"
 
-void	*ft_my_free_all(t_lalloc *lalloc)
+t_lalloc	*init_allocator(void)
 {
-	t_my_malloc	*current;
-	t_my_malloc	*next;
-	void		*ptr;
-	t_lalloc	*allocator_to_free;
+	t_lalloc	*new;
+	t_my_malloc	*allocator_node;
 
-	if (!lalloc)
+	new = malloc(sizeof(t_lalloc));
+	if (!new)
 		return (NULL);
-	current = lalloc->head;
-	allocator_to_free = NULL;
-	while (current)
+	allocator_node = malloc(sizeof(t_my_malloc));
+	if (!allocator_node)
 	{
-		next = current->next;
-		ptr = current->ptr;
-		if (ptr == lalloc)
-			allocator_to_free = lalloc;
-		else
-			free(ptr);
-		free(current);
-		current = next;
+		free(new);
+		return (NULL);
 	}
-	if (allocator_to_free)
-		free(allocator_to_free);
-	return (NULL);
+	allocator_node->size = sizeof(t_lalloc);
+	allocator_node->ptr = new;
+	allocator_node->next = NULL;
+	new->head = allocator_node;
+	new->total_allocated = sizeof(t_lalloc);
+	new->total_freed = 0;
+	return (new);
 }

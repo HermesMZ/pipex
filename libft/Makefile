@@ -48,6 +48,7 @@ SRCS_MY_ALLOC := \
 	ft_my_malloc.c \
 	ft_split_alloc.c \
 	ft_strjoin_alloc.c \
+	ft_init_allocator.c \
 
 SRCS_NUM := \
 	ft_abs.c \

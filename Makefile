@@ -9,21 +9,39 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS = \
 	init.c \
-	main.c \
 	parsing.c \
+	command_parser.c \
 	pipex.c \
 	utils.c \
 	debug_utils.c \
 
+MANDATORY = \
+	main.c \
+
+BONUS = \
+	main_bonus.c \
+	here_doc_bonus.c \
+
+
 SRCS_PATH = $(addprefix $(SRCS_DIR)/, $(SRCS))
+MANDATORY_PATH = $(addprefix $(SRCS_DIR)/, $(MANDATORY))
+BONUS_PATH = $(addprefix $(SRCS_DIR)/, $(BONUS))
+
 OBJS = $(SRCS_PATH:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
+MANDATORY_OBJS = $(MANDATORY_PATH:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
+BONUS_OBJS = $(BONUS_PATH:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 INCLUDES = -I $(INCLUDES_DIR) -I $(LIBFT_DIR)/includes
 
-all: $(LIBFT) $(LIBMLX) $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJS) $(MANDATORY_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(MANDATORY_OBJS) $(LIBFT) -o $(NAME)
+
+bonus: $(LIBFT) $(NAME)_bonus
+
+$(NAME)_bonus: $(OBJS) $(BONUS_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -46,4 +64,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

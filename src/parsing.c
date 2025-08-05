@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 14:31:37 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:22:44 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,20 +83,7 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 
 	if (index < 0 || !cmds || !cmd || !*cmd)
 		return (-1);
-	args = NULL;
-	if (ft_strchr(cmd, ' ') == NULL)
-	{
-		args = ft_my_malloc(pipex->allocator, sizeof(char *) * 2);
-		if (!args)
-			return (-1);
-		args[0] = ft_my_malloc(pipex->allocator, ft_strlen(cmd) + 1);
-		if (!args[0])
-			return (-1);
-		ft_strlcpy(args[0], cmd, ft_strlen(cmd) + 1);
-		args[1] = NULL;
-	}
-	else
-		args = ft_split_alloc(pipex->allocator, cmd, ' ');
+	args = parse_command_with_quotes(pipex->allocator, cmd);
 	if (!args)
 		return (-1);
 	cmds[index] = args;
@@ -106,7 +93,7 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 int	parse_args(t_pipex *pipex, int argc, char *argv[])
 {
 	int	i;
-
+ft_printf("Parsing arguments...\n");
 	i = 0;
 	pipex->infile = ft_my_malloc(pipex->allocator, ft_strlen(argv[1]) + 1);
 	if (!pipex->infile)
