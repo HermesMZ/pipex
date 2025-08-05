@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 10:33:02 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:15:08 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,23 @@ int	check_files_rights(t_pipex *pipex)
 	return (0);
 }
 
-char	*check_full_path(char *cmd, char *path_dir)
+char	*check_full_path(t_lalloc *allocator, char *cmd, char *path_dir)
 {
 	char	*full_path;
 	char	*path_with_slash;
 
 	if (!cmd || !path_dir)
 		return (NULL);
-	path_with_slash = ft_strjoin(path_dir, "/");
+	path_with_slash = ft_strjoin_alloc(allocator, path_dir, "/");
 	if (!path_with_slash)
 		return (NULL);
-	full_path = ft_strjoin(path_with_slash, cmd);
-	free(path_with_slash);
+	full_path = ft_strjoin_alloc(allocator, path_with_slash, cmd);
+	ft_my_free(allocator, path_with_slash);
 	if (!full_path)
 		return (NULL);
 	if (access(full_path, F_OK | X_OK) == 0)
 		return (full_path);
-	free(full_path);
+	ft_my_free(allocator, full_path);
 	return (NULL);
 }
 
@@ -59,17 +59,17 @@ int	check_command(t_pipex *pipex, char *cmd, int index)
 		return (-1);
 	if (ft_strchr(cmd, '/') != NULL && access(cmd, F_OK | X_OK) == 0)
 	{
-		free(pipex->cmds[index][0]);
+		ft_my_free(pipex->allocator, pipex->cmds[index][0]);
 		pipex->cmds[index][0] = ft_strdup(cmd);
 		return (0);
 	}
 	i = -1;
 	while (pipex->path[++i])
 	{
-		full_path = check_full_path(cmd, pipex->path[i]);
+		full_path = check_full_path(pipex->allocator, cmd, pipex->path[i]);
 		if (full_path)
 		{
-			free(pipex->cmds[index][0]);
+			ft_my_free(pipex->allocator, pipex->cmds[index][0]);
 			pipex->cmds[index][0] = full_path;
 			return (0);
 		}
@@ -86,21 +86,21 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 	args = NULL;
 	if (ft_strchr(cmd, ' ') == NULL)
 	{
-		args = malloc(sizeof(char *) * 2);
+		args = ft_my_malloc(pipex->allocator, sizeof(char *) * 2);
 		if (!args)
 			return (-1);
-		args[0] = ft_strdup(cmd);
+		args[0] = ft_my_malloc(pipex->allocator, ft_strlen(cmd) + 1);
 		if (!args[0])
-			return (free(args), -1);
+			return (-1);
+		ft_strlcpy(args[0], cmd, ft_strlen(cmd) + 1);
 		args[1] = NULL;
 	}
 	else
-		args = ft_split(cmd, ' ');
+		args = ft_split_alloc(pipex->allocator, cmd, ' ');
 	if (!args)
 		return (-1);
 	cmds[index] = args;
-	check_command(pipex, args[0], index);
-	return (0);
+	return (check_command(pipex, args[0], index));
 }
 
 int	parse_args(t_pipex *pipex, int argc, char *argv[])
@@ -108,13 +108,16 @@ int	parse_args(t_pipex *pipex, int argc, char *argv[])
 	int	i;
 
 	i = 0;
-	pipex->infile = ft_strdup(argv[1]);
+	pipex->infile = ft_my_malloc(pipex->allocator, ft_strlen(argv[1]) + 1);
 	if (!pipex->infile)
 		return (-1);
-	pipex->outfile = ft_strdup(argv[argc - 1]);
+	ft_strlcpy(pipex->infile, argv[1], ft_strlen(argv[1]) + 1);
+	pipex->outfile = ft_my_malloc(pipex->allocator,
+			ft_strlen(argv[argc - 1]) + 1);
 	if (!pipex->outfile)
 		return (-1);
-	pipex->cmds = init_cmds(argc - 3);
+	ft_strlcpy(pipex->outfile, argv[argc - 1], ft_strlen(argv[argc - 1]) + 1);
+	pipex->cmds = init_cmds(pipex->allocator, argc - 3);
 	if (!pipex->cmds)
 		return (-1);
 	while (i < argc - 3)

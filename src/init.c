@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 10:11:41 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:05:22 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	get_paths_from_envp(t_pipex *pipex, char *envp[])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
-			pipex->path = ft_split(envp[i] + 5, ':');
+			pipex->path = ft_split_alloc(pipex->allocator, envp[i] + 5, ':');
 			return ;
 		}
 		i++;
@@ -41,17 +41,28 @@ t_pipex	*init_pipex(t_pipex *pipex, char *envp[])
 	pipex->outfile = NULL;
 	pipex->infile_fd = -1;
 	pipex->outfile_fd = -1;
+	pipex->cmds = NULL;
+	pipex->path = NULL;
 	pipex->envp = envp;
+	pipex->allocator = malloc(sizeof(t_lalloc));
+	if (!pipex->allocator)
+	{
+		free(pipex);
+		return (NULL);
+	}
+	pipex->allocator->head = NULL;
+	pipex->allocator->total_allocated = 0;
+	pipex->allocator->total_freed = 0;
 	get_paths_from_envp(pipex, envp);
 	return (pipex);
 }
 
-char	***init_cmds(int cmd_count)
+char	***init_cmds(t_lalloc *allocator, int cmd_count)
 {
 	char	***cmds;
 	int		i;
 
-	cmds = malloc(sizeof(char **) * (cmd_count + 1));
+	cmds = ft_my_malloc(allocator, sizeof(char **) * (cmd_count + 1));
 	if (!cmds)
 		return (NULL);
 	i = 0;

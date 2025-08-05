@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 14:07:41 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/07/16 22:30:19 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/05 12:36:32 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <string.h>
 # include <unistd.h>
 # include "ft_printf.h"
+# include "ft_my_alloc.h"
 
 // get_next_line
 char			*get_next_line(int fd);

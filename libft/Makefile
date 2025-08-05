@@ -42,6 +42,13 @@ SRCS_MEM := \
     ft_memset.c \
     ft_realloc.c
 
+SRCS_MY_ALLOC := \
+	ft_my_free_all.c \
+	ft_my_free.c \
+	ft_my_malloc.c \
+	ft_split_alloc.c \
+	ft_strjoin_alloc.c \
+
 SRCS_NUM := \
 	ft_abs.c \
     ft_atoi.c \
@@ -108,6 +115,7 @@ SRCS_ALL := \
     $(addprefix $(SRC_DIR)/gnl/, $(SRCS_GNL)) \
     $(addprefix $(SRC_DIR)/lists/, $(SRCS_LISTS)) \
     $(addprefix $(SRC_DIR)/mem/, $(SRCS_MEM)) \
+    $(addprefix $(SRC_DIR)/my_alloc/, $(SRCS_MY_ALLOC)) \
     $(addprefix $(SRC_DIR)/num/, $(SRCS_NUM)) \
     $(addprefix $(SRC_DIR)/printf/, $(SRCS_PRINTF)) \
     $(addprefix $(SRC_DIR)/put/, $(SRCS_PUT)) \

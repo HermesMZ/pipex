@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:29:58 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 10:19:19 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 14:06:44 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	ft_free_tab(char ***tab)
 		}
 		i++;
 	}
-	free(tab);
 }
 
 void	close_fds(t_pipex *pipex)
@@ -46,14 +45,11 @@ void	free_pipex(t_pipex *pipex)
 {
 	if (!pipex)
 		return ;
-	if (pipex->infile)
-		free(pipex->infile);
-	if (pipex->outfile)
-		free(pipex->outfile);
-	if (pipex->path)
-		free_splitted(pipex->path);
-	if (pipex->cmds)
-		ft_free_tab(pipex->cmds);
 	close_fds(pipex);
+	if (pipex->allocator)
+	{
+		ft_my_free_all(pipex->allocator);
+		free(pipex->allocator);
+	}
 	free(pipex);
 }
