@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc_bonus.c                                    :+:      :+:    :+:   */
+/*   here_doc_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/05 17:08:24 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 18:34:17 by mzimeris         ###   ########.fr       */
+/*   Created: 2025/08/05 18:44:11 by mzimeris          #+#    #+#             */
+/*   Updated: 2025/08/05 18:50:09 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "pipex.h"
 
@@ -73,3 +74,4 @@ int	here_doc(t_pipex *pipex, int argc, char *argv[])
 		return (-1);
 	return (0);
 }
+// je dois mettre l'outfile a la fin pour que le here_doc append bien le texte

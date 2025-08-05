@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 18:22:44 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:43:53 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index)
 int	parse_args(t_pipex *pipex, int argc, char *argv[])
 {
 	int	i;
-ft_printf("Parsing arguments...\n");
+
 	i = 0;
 	pipex->infile = ft_my_malloc(pipex->allocator, ft_strlen(argv[1]) + 1);
 	if (!pipex->infile)
