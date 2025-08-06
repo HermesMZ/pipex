@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:44:11 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/06 11:43:03 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:19:36 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@ void	here_doc_unlink(t_pipex *pipex)
 	}
 }
 
-int	check_heredoc_files_rights(t_pipex *pipex)
+int	check_fd(t_pipex *pipex)
 {
-	pipex->infile_fd = open(pipex->infile, O_RDONLY);
 	if (pipex->infile_fd < 0)
 	{
 		perror(pipex->infile);
@@ -58,18 +57,17 @@ int	here_doc_parse_args(t_pipex *pipex, int argc, char *argv[])
 			return (-1);
 		i++;
 	}
-	if (check_heredoc_files_rights(pipex) < 0)
+	if (check_fd(pipex) < 0)
 		return (-1);
 	return (0);
 }
 
 int	here_doc(t_pipex *pipex, int argc, char *argv[])
 {
-	int		here_doc_fd;
 	char	*line;
 
-	here_doc_fd = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (here_doc_fd < 0)
+	pipex->infile_fd = open("here_doc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (pipex->infile_fd < 0)
 		return (perror("here_doc"), -1);
 	while (1)
 	{
@@ -82,11 +80,10 @@ int	here_doc(t_pipex *pipex, int argc, char *argv[])
 			free(line);
 			break ;
 		}
-		write(here_doc_fd, line, ft_strlen(line));
+		write(pipex->infile_fd, line, ft_strlen(line));
 		free(line);
 	}
 	get_next_line(-1);
-	pipex->infile_fd = here_doc_fd;
 	if (here_doc_parse_args(pipex, argc, argv) < 0)
 		return (-1);
 	return (0);

@@ -6,13 +6,13 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/06 11:03:51 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:22:49 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	check_files_rights(t_pipex *pipex)
+int	check_fd(t_pipex *pipex)
 {
 	pipex->infile_fd = open(pipex->infile, O_RDONLY);
 	if (pipex->infile_fd < 0)
@@ -113,7 +113,7 @@ int	parse_args(t_pipex *pipex, int argc, char *argv[])
 			return (-1);
 		i++;
 	}
-	if (check_files_rights(pipex) < 0)
+	if (check_fd(pipex) < 0)
 		return (-1);
 	return (0);
 }

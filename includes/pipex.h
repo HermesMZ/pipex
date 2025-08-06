@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:39:47 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/06 11:42:12 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 12:23:03 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**parse_command_with_quotes(t_lalloc *allocator, char *cmd);
 int		parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index);
 
 int		check_command(t_pipex *pipex, char *cmd, int index);
-int		check_files_rights(t_pipex *pipex);
+int		check_fd(t_pipex *pipex);
 int		check_command(t_pipex *pipex, char *cmd, int index);
 
 void	free_pipex(t_pipex *pipex);
