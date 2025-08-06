@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:13:46 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 18:36:55 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 11:22:48 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ int		parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index);
 int		here_doc(t_pipex *pipex, int argc, char *argv[]);
 int		here_doc_parse_args(t_pipex *pipex, int argc, char *argv[]);
 void	here_doc_unlink(t_pipex *pipex);
+
+void	setup_input_redirect(int in_fd);
+int		setup_output_redirect(t_pipex *pipex, int i, int pipe_fd[2]);
 
 // Debug
 void	debug_print_pipex_info(t_pipex *pipex);

@@ -6,10 +6,9 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:44:11 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 18:50:09 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 10:58:34 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "pipex.h"
 
@@ -20,6 +19,24 @@ void	here_doc_unlink(t_pipex *pipex)
 		if (unlink("here_doc") < 0)
 			perror("Error unlinking here_doc file");
 	}
+}
+
+int	check_heredoc_files_rights(t_pipex *pipex)
+{
+	pipex->infile_fd = open(pipex->infile, O_RDONLY);
+	if (pipex->infile_fd < 0)
+	{
+		perror(pipex->infile);
+		pipex->infile_fd = -1;
+	}
+	pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
+			| O_APPEND, 0644);
+	if (pipex->outfile_fd < 0)
+	{
+		perror(pipex->outfile);
+		return (-2);
+	}
+	return (0);
 }
 
 int	here_doc_parse_args(t_pipex *pipex, int argc, char *argv[])
@@ -41,7 +58,7 @@ int	here_doc_parse_args(t_pipex *pipex, int argc, char *argv[])
 			return (-1);
 		i++;
 	}
-	if (check_files_rights(pipex) < 0)
+	if (check_heredoc_files_rights(pipex) < 0)
 		return (-1);
 	return (0);
 }
@@ -74,4 +91,3 @@ int	here_doc(t_pipex *pipex, int argc, char *argv[])
 		return (-1);
 	return (0);
 }
-// je dois mettre l'outfile a la fin pour que le here_doc append bien le texte

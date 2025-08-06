@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:12 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 18:36:55 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 10:55:23 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	main(int argc, char *argv[], char *envp[])
 	if (strcmp(argv[1], "here_doc") == 0)
 	{
 		pipex_data->infile = "here_doc";
-		ft_printf("Here Document mode activated\n");
 		if (here_doc(pipex_data, argc, argv) < 0)
 			return (free_pipex(pipex_data), 1);
 	}

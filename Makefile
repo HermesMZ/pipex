@@ -14,6 +14,7 @@ SRCS = \
 	pipex.c \
 	utils.c \
 	debug_utils.c \
+	redirect.c \
 
 MANDATORY = \
 	main.c \
@@ -62,6 +63,14 @@ fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 
+fclean_bonus: clean
+	@echo "Nettoyage de $(NAME), libft et fichiers bonus..."
+	@rm -f $(NAME)
+	@rm -f here_doc
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+re_bonus: fclean_bonus bonus
+
+.PHONY: all bonus clean fclean fclean_bonus re re_bonus

@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 18:43:53 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 11:03:51 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_files_rights(t_pipex *pipex)
 	if (pipex->outfile_fd < 0)
 	{
 		perror(pipex->outfile);
-		return (-2);
+		pipex->outfile_fd = -1;
 	}
 	return (0);
 }
