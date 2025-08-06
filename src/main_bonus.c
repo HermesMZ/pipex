@@ -6,11 +6,11 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:12 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/06 10:55:23 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 11:44:46 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 int	main(int argc, char *argv[], char *envp[])
 {

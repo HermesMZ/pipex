@@ -6,11 +6,11 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:44:11 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/06 10:58:34 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/06 11:43:03 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 void	here_doc_unlink(t_pipex *pipex)
 {
