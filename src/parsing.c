@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 10:44:26 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/07 13:06:20 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,8 @@ int	check_command(t_pipex *pipex, char *cmd, int index)
 
 	if (!cmd || !pipex || !pipex->path)
 		return (-1);
-	
 	if (ft_strchr(cmd, '/') != NULL && access(cmd, F_OK | X_OK) == 0)
-	{
-		// Pour les chemins absolus/relatifs, on ne change rien
-		// car cmd est déjà le bon chemin
 		return (0);
-	}
 	i = -1;
 	while (pipex->path[++i])
 	{

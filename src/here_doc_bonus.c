@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 18:44:11 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 12:14:25 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/07 13:07:08 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	here_doc_unlink(t_pipex *pipex)
 
 int	check_heredoc_fd(t_pipex *pipex)
 {
+	pipex->infile_fd = open("here_doc", O_RDONLY);
 	if (pipex->infile_fd < 0)
 	{
 		perror(pipex->infile);
@@ -85,9 +86,6 @@ int	here_doc(t_pipex *pipex, int argc, char *argv[])
 	}
 	close(pipex->infile_fd);
 	get_next_line(-1);
-	pipex->infile_fd = open("here_doc", O_RDONLY);
-	if (pipex->infile_fd < 0)
-		return (perror("here_doc"), -1);
 	if (here_doc_parse_args(pipex, argc, argv) < 0)
 		return (-1);
 	return (0);

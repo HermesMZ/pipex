@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:34 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 10:42:26 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/07 13:05:22 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ static int	wait_for_children(void)
 				exit_status = last_exit_status;
 		}
 	}
-	// Si aucun processus n'a échoué, retourner le statut du dernier
 	if (exit_status == 0)
 		exit_status = last_exit_status;
 	return (exit_status);
