@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:34 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 13:05:22 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/11 14:51:06 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+// valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes 
+// --trace-children=yes --track-fds=yes ./pipex Makefile cat "wc -l" outfile
 
 int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 {
@@ -27,6 +30,9 @@ int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 		free_pipex(pipex);
 		exit(127);
 	}
+	close(pipex->infile_fd);
+	close(pipex->outfile_fd);
+
 	execve(pipex->cmds[i][0], pipex->cmds[i], pipex->envp);
 	perror("execve");
 	free_pipex(pipex);
@@ -46,7 +52,10 @@ int	exec(t_pipex *pipex, int i, int in_fd)
 	if (pid < 0)
 		return (ft_putstr_fd("Error: Fork failed\n", 2), -1);
 	if (pid == 0)
+	{
+		close(pipex->infile_fd);
 		return (exec_child(pipex, i, in_fd, pipe_fd));
+	}
 	if (in_fd > 0)
 		close(in_fd);
 	if (pipex->cmds[i + 1] != NULL)
