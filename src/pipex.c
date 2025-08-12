@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:34 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/11 14:51:06 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/11 21:13:55 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <signal.h>
 
-// valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes 
-// --trace-children=yes --track-fds=yes ./pipex Makefile cat "wc -l" outfile
+// valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --track-fds=yes ./pipex Makefile cat "wc -l" outfile
+
+// ➜  pipex git:(main) ✗ timeout 3 strace -f -e trace=pipe,dup2,close,wait4 ./pipex test_file.txt "cat" "wc -l" output.txt 2>&1 | head -30
 
 int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 {
 	setup_input_redirect(in_fd);
-	if (setup_output_redirect(pipex, i, pipe_fd) < 0)
+	if (setup_output_redirect(pipex, i, pipe_fd, pipex->outfile) < 0)
 	{
 		free_pipex(pipex);
 		exit(1);
@@ -30,9 +32,6 @@ int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 		free_pipex(pipex);
 		exit(127);
 	}
-	close(pipex->infile_fd);
-	close(pipex->outfile_fd);
-
 	execve(pipex->cmds[i][0], pipex->cmds[i], pipex->envp);
 	perror("execve");
 	free_pipex(pipex);
@@ -53,7 +52,6 @@ int	exec(t_pipex *pipex, int i, int in_fd)
 		return (ft_putstr_fd("Error: Fork failed\n", 2), -1);
 	if (pid == 0)
 	{
-		close(pipex->infile_fd);
 		return (exec_child(pipex, i, in_fd, pipe_fd));
 	}
 	if (in_fd > 0)
@@ -63,26 +61,31 @@ int	exec(t_pipex *pipex, int i, int in_fd)
 	return (0);
 }
 
-static int	wait_for_children(void)
+int	wait_for_children(void)
 {
 	int	status;
-	int	exit_status;
 	int	last_exit_status;
 
-	exit_status = 0;
 	last_exit_status = 0;
 	while (wait(&status) > 0)
 	{
 		if (WIFEXITED(status))
 		{
 			last_exit_status = WEXITSTATUS(status);
-			if (last_exit_status != 0)
-				exit_status = last_exit_status;
+		}
+		else if (WIFSIGNALED(status))
+		{
+			// Handle processes terminated by signals
+			int sig = WTERMSIG(status);
+			if (sig != SIGPIPE)
+			{
+				// Non-SIGPIPE signals indicate real errors
+				last_exit_status = 128 + sig;
+			}
 		}
 	}
-	if (exit_status == 0)
-		exit_status = last_exit_status;
-	return (exit_status);
+	// In a pipeline, bash returns the exit status of the last command
+	return (last_exit_status);
 }
 
 int	pipex(t_pipex *pipex)
@@ -90,13 +93,32 @@ int	pipex(t_pipex *pipex)
 	int	i;
 	int	in_fd;
 	int	last_exit_status;
-	int	has_errors;
+	int	outfile_test;
+	int	outfile_error;
 
 	i = 0;
-	in_fd = pipex->infile_fd;
-	has_errors = 0;
-	if (pipex->outfile_fd < 0)
-		has_errors = 1;
+	outfile_error = 0;
+	
+	// Test if output file can be created/written to
+	outfile_test = open(pipex->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (outfile_test < 0)
+	{
+		perror(pipex->outfile);
+		outfile_error = 1; // Remember the error but continue execution
+	}
+	else
+	{
+		close(outfile_test);
+	}
+	
+	// Open input file locally in parent process
+	in_fd = open(pipex->infile, O_RDONLY);
+	if (in_fd < 0)
+	{
+		perror(pipex->infile);
+		in_fd = -1; // Will redirect to /dev/null in child
+	}
+	
 	while (pipex->cmds[i])
 	{
 		in_fd = exec(pipex, i, in_fd);
@@ -104,8 +126,12 @@ int	pipex(t_pipex *pipex)
 			return (-1);
 		i++;
 	}
+	
 	last_exit_status = wait_for_children();
-	if (has_errors)
+	
+	// If there was an output file error, return 1 regardless of command exit status
+	if (outfile_error)
 		return (1);
+		
 	return (last_exit_status);
 }

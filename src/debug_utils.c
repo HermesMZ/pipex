@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 16:00:06 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/04 18:13:48 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/11 18:46:07 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ void	debug_print_pipex_info(t_pipex *pipex)
 	ft_printf("Pipex Info:\n");
 	ft_printf("Infile: %s\n", pipex->infile);
 	ft_printf("Outfile: %s\n", pipex->outfile);
-	ft_printf("Infile FD: %d\n", pipex->infile_fd);
-	ft_printf("Outfile FD: %d\n", pipex->outfile_fd);
 	if (pipex->cmds)
 	{
 		i = 0;

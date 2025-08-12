@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 10:42:12 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/11 18:43:57 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ t_pipex	*init_pipex(t_pipex *pipex, char *envp[])
 	*pipex = (t_pipex){0};
 	pipex->infile = NULL;
 	pipex->outfile = NULL;
-	pipex->infile_fd = -1;
-	pipex->outfile_fd = -1;
 	pipex->cmds = NULL;
 	pipex->path = NULL;
 	pipex->envp = envp;

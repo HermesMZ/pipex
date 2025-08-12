@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:17:55 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/06 11:18:38 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/11 21:13:55 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,15 @@ static void	setup_pipe_output(int pipe_fd[2])
 	close(pipe_fd[1]);
 }
 
-static void	setup_file_output(int outfile_fd)
+static void	setup_file_output(char *outfile)
 {
+	int	outfile_fd;
 	int	null_fd;
 
+	outfile_fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile_fd < 0)
 	{
+		perror(outfile);
 		null_fd = open("/dev/null", O_WRONLY);
 		if (null_fd >= 0)
 		{
@@ -59,11 +62,11 @@ static void	setup_file_output(int outfile_fd)
 	}
 }
 
-int	setup_output_redirect(t_pipex *pipex, int i, int pipe_fd[2])
+int	setup_output_redirect(t_pipex *pipex, int i, int pipe_fd[2], char *outfile)
 {
 	if (pipex->cmds[i + 1] != NULL)
 		setup_pipe_output(pipe_fd);
 	else
-		setup_file_output(pipex->outfile_fd);
+		setup_file_output(outfile);
 	return (0);
 }

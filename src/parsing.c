@@ -6,31 +6,11 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:38:18 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 13:06:20 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/11 18:43:57 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-int	check_fd(t_pipex *pipex)
-{
-	pipex->infile_fd = open(pipex->infile, O_RDONLY);
-	if (pipex->infile_fd < 0)
-	{
-		perror(pipex->infile);
-		pipex->infile_fd = -1;
-		return (-1);
-	}
-	pipex->outfile_fd = open(pipex->outfile, O_WRONLY | O_CREAT
-			| O_TRUNC, 0644);
-	if (pipex->outfile_fd < 0)
-	{
-		perror(pipex->outfile);
-		pipex->outfile_fd = -1;
-		return (-1);
-	}
-	return (0);
-}
 
 char	*check_full_path(t_lalloc *allocator, char *cmd, char *path_dir)
 {
@@ -111,7 +91,5 @@ int	parse_args(t_pipex *pipex, int argc, char *argv[])
 			return (-1);
 		i++;
 	}
-	if (check_fd(pipex) < 0)
-		return (-1);
 	return (0);
 }

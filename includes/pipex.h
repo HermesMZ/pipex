@@ -6,7 +6,7 @@
 /*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 11:39:47 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/07 10:13:41 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/11 19:08:21 by zoum             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <signal.h>
 # include <stdbool.h>
 # include "libft.h"
 
@@ -41,8 +42,6 @@ typedef struct s_pipex
 	char		*infile;
 	char		***cmds;
 	char		*outfile;
-	int			infile_fd;
-	int			outfile_fd;
 	t_lalloc	*allocator;
 }	t_pipex;
 
@@ -56,13 +55,12 @@ char	**parse_command_with_quotes(t_lalloc *allocator, char *cmd);
 int		parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index);
 
 int		check_command(t_pipex *pipex, char *cmd, int index);
-int		check_fd(t_pipex *pipex);
-int		check_command(t_pipex *pipex, char *cmd, int index);
+int		parse_one_command(t_pipex *pipex, char *cmd, char ***cmds, int index);
 
 void	free_pipex(t_pipex *pipex);
 
 void	setup_input_redirect(int in_fd);
-int		setup_output_redirect(t_pipex *pipex, int i, int pipe_fd[2]);
+int		setup_output_redirect(t_pipex *pipex, int i, int pipe_fd[2], char *outfile);
 
 // Debug
 void	debug_print_pipex_info(t_pipex *pipex);
