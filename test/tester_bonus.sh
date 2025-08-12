@@ -23,10 +23,18 @@ TESTS_TOTAL=0
 # Fonction utilitaire pour nettoyer les fichiers temporaires
 cleanup_test_files() {
     rm -f bash_out_$$ pipex_out_$$ bash_err_$$ pipex_err_$$
-    rm -f valgrind_out_$$ timing_$$
+    rm -f test_input_$$ valgrind_out_$$ timing_$$
     rm -f here_doc* 2>/dev/null
     # Nettoyer aussi les fichiers de sortie courants
     rm -f out*.txt bout*.txt heredoc*.txt multi*.txt advanced*.txt 2>/dev/null
+}
+
+# Fonction pour mesurer le temps d'exécution
+measure_time() {
+    local cmd="$1"
+    local time_file="$2"
+    
+    { time $cmd; } 2> "$time_file"
 }
 
 # Fonction principale de comparaison
@@ -34,8 +42,9 @@ compare_bash_pipex() {
     local test_name="$1"
     local bash_cmd="$2"
     local pipex_cmd="$3"
-    local expect_error="$4"  # "true" si on s'attend à une erreur
-    local check_timing="$5"  # "true" pour vérifier le timing (tests avec sleep)
+    local input_data="$4"    # optionnel pour heredoc
+    local expect_error="$5"  # "true" si on s'attend à une erreur
+    local check_timing="$6"  # "true" pour vérifier le timing (tests avec sleep)
     
     TESTS_TOTAL=$((TESTS_TOTAL + 1))
     
@@ -46,9 +55,15 @@ compare_bash_pipex() {
     local pipex_out="pipex_out_$$"
     local bash_err="bash_err_$$"
     local pipex_err="pipex_err_$$"
+    local test_input="test_input_$$"
     local valgrind_out="valgrind_out_$$"
     local bash_time="bash_time_$$"
     local pipex_time="pipex_time_$$"
+    
+    # Préparer fichier d'entrée si nécessaire
+    if [[ -n "$input_data" ]]; then
+        echo -e "$input_data" > "$test_input"
+    fi
     
     # Variables pour les résultats
     local bash_exit=0
@@ -62,17 +77,29 @@ compare_bash_pipex() {
     # 1. EXÉCUTION BASH
     # ========================================================================
     
-    # Exécution directe de la commande bash
-    { time /bin/bash -c "$bash_cmd" > "$bash_out" 2>"$bash_err"; } 2>"$bash_time"
-    bash_exit=$?
+    if [[ -n "$input_data" ]]; then
+        measure_time "echo -e '$input_data' | /bin/bash -c \"$bash_cmd\" > '$bash_out' 2>'$bash_err'" "$bash_time"
+        echo -e "$input_data" | /bin/bash -c "$bash_cmd" > "$bash_out" 2>"$bash_err"
+        bash_exit=$?
+    else
+        measure_time "/bin/bash -c \"$bash_cmd\" > '$bash_out' 2>'$bash_err'" "$bash_time"
+        /bin/bash -c "$bash_cmd" > "$bash_out" 2>"$bash_err"
+        bash_exit=$?
+    fi
     
     # ========================================================================
     # 2. EXÉCUTION PIPEX AVEC VALGRIND
     # ========================================================================
     
-    # Exécution directe avec valgrind, redirection stderr vers pipex_err
-    { time valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --track-fds=yes --error-exitcode=42 --log-file="$valgrind_out" $pipex_cmd > "$pipex_out" 2>"$pipex_err"; } 2>"$pipex_time"
-    pipex_exit=$?
+    if [[ -n "$input_data" ]]; then
+        measure_time "echo -e '$input_data' | valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --track-fds=yes --error-exitcode=42 --log-file='$valgrind_out' $pipex_cmd > '$pipex_out' 2>'$pipex_err'" "$pipex_time"
+        echo -e "$input_data" | valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --track-fds=yes --error-exitcode=42 --log-file="$valgrind_out" $pipex_cmd > "$pipex_out" 2>"$pipex_err"
+        pipex_exit=$?
+    else
+        measure_time "valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --track-fds=yes --error-exitcode=42 --log-file='$valgrind_out' $pipex_cmd > '$pipex_out' 2>'$pipex_err'" "$pipex_time"
+        valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --track-fds=yes --error-exitcode=42 --log-file="$valgrind_out" $pipex_cmd > "$pipex_out" 2>"$pipex_err"
+        pipex_exit=$?
+    fi
     
     # ========================================================================
     # 3. VÉRIFICATION VALGRIND
@@ -250,16 +277,16 @@ print_test_summary() {
     echo -e "${RED}Failed: $TESTS_FAILED${NC}"
     
     if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}🎉 ALL TESTS PASSED! 🎉${NC}"
+        echo -e "\n${GREEN}🎉 ALL BONUS TESTS PASSED! 🎉${NC}"
         return 0
     else
-        echo -e "\n${RED}❌ $TESTS_FAILED TEST(S) FAILED ❌${NC}"
+        echo -e "\n${RED}❌ $TESTS_FAILED BONUS TEST(S) FAILED ❌${NC}"
         return 1
     fi
 }
 
 # ============================================================================
-# SCRIPT DE TEST PIPEX - VERSION STANDARD UNIQUEMENT
+# SCRIPT DE TEST PIPEX - VERSION BONUS UNIQUEMENT
 # ============================================================================
 
 # Vérifier que nous sommes dans le bon répertoire
@@ -268,24 +295,24 @@ if [[ ! -f "../Makefile" ]]; then
     exit 1
 fi
 
-echo -e "\n${BLUE}Starting pipex standard tests...${NC}"
+echo -e "\n${BLUE}Starting pipex bonus tests...${NC}"
 
 # Nettoyage initial pour partir sur une base propre
-rm -f *.txt here_doc* bash_out_* pipex_out_* bash_err_* pipex_err_* valgrind_out_* timing_* 2>/dev/null
+rm -f *.txt here_doc* bash_out_* pipex_out_* bash_err_* pipex_err_* test_input_* valgrind_out_* timing_* 2>/dev/null
 
 # ============================================================================
-# COMPILATION ET TEST VERSION STANDARD
+# COMPILATION ET TEST VERSION BONUS
 # ============================================================================
 
-echo -e "\n${BLUE}=== TESTING STANDARD VERSION ===${NC}"
+echo -e "\n${BLUE}=== TESTING BONUS VERSION ===${NC}"
 
-# Compilation version standard
-echo -e "\n${YELLOW}Compiling standard version...${NC}"
+# Compilation version bonus
+echo -e "\n${YELLOW}Compiling bonus version...${NC}"
 cd ..
-if make re > /dev/null 2>&1; then
-    echo -e "${GREEN}✓ Standard version compiled successfully${NC}"
+if make re_bonus > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ Bonus version compiled successfully${NC}"
 else
-    echo -e "${RED}✗ Standard compilation failed${NC}"
+    echo -e "${RED}✗ Bonus compilation failed${NC}"
     exit 1
 fi
 cd test
@@ -295,146 +322,165 @@ echo "hello world" > test_input.txt
 echo -e "line1\nline2\nline3" > test_multiline.txt
 echo "" > test_empty.txt
 
-# Fichier pour les tests de permissions
-echo "permission test" > test_perm.txt
-chmod 000 test_perm.txt
-
 # ============================================================================
-# TESTS DE VALIDATION DU FORMAT STANDARD
+# TESTS STANDARD SUR VERSION BONUS (vérifier compatibilité)
 # ============================================================================
 
-echo -e "\n${BLUE}=== TESTING STANDARD VERSION FORMAT RESTRICTIONS ===${NC}"
-
-# Test que la version standard rejette heredoc
-echo -e "\n${YELLOW}Testing that standard version rejects heredoc...${NC}"
-../pipex here_doc EOF cat cat test_heredoc.txt 2>heredoc_err.txt
-heredoc_exit=$?
-echo "Heredoc exit code: $heredoc_exit"
-if [[ $heredoc_exit -eq 1 ]]; then
-    echo -e "${GREEN}✓ Standard version correctly rejects heredoc format${NC}"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-    echo -e "${RED}✗ Standard version should reject heredoc format (exit code 1)${NC}"
-    echo "Error output:"
-    cat heredoc_err.txt
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_TOTAL=$((TESTS_TOTAL + 1))
-
-# Test que la version standard rejette plus de 2 commandes
-echo -e "\n${YELLOW}Testing that standard version rejects multiple pipes...${NC}"
-../pipex test_input.txt cat cat cat test_multi.txt 2>multi_err.txt
-multi_exit=$?
-echo "Multiple commands exit code: $multi_exit"
-if [[ $multi_exit -eq 1 ]]; then
-    echo -e "${GREEN}✓ Standard version correctly rejects multiple pipes format${NC}"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-    echo -e "${RED}✗ Standard version should reject multiple pipes format (exit code 1)${NC}"
-    echo "Error output:"
-    cat multi_err.txt
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_TOTAL=$((TESTS_TOTAL + 1))
-
-# Test arguments insuffisants
-echo -e "\n${YELLOW}Testing too few arguments...${NC}"
-../pipex test_input.txt cat 2>few_args_err.txt
-few_args_exit=$?
-echo "Too few args exit code: $few_args_exit"
-if [[ $few_args_exit -eq 1 ]]; then
-    echo -e "${GREEN}✓ Standard version correctly rejects too few arguments${NC}"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-    echo -e "${RED}✗ Standard version should reject too few arguments (exit code 1)${NC}"
-    echo "Error output:"
-    cat few_args_err.txt
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_TOTAL=$((TESTS_TOTAL + 1))
-
-# Test arguments trop nombreux
-echo -e "\n${YELLOW}Testing too many arguments...${NC}"
-../pipex test_input.txt cat cat out.txt extra_arg 2>many_args_err.txt
-many_args_exit=$?
-echo "Too many args exit code: $many_args_exit"
-if [[ $many_args_exit -eq 1 ]]; then
-    echo -e "${GREEN}✓ Standard version correctly rejects too many arguments${NC}"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-    echo -e "${RED}✗ Standard version should reject too many arguments (exit code 1)${NC}"
-    echo "Error output:"
-    cat many_args_err.txt
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_TOTAL=$((TESTS_TOTAL + 1))
-
-# Test format exact valide
-echo -e "\n${YELLOW}Testing exact valid format...${NC}"
-../pipex test_input.txt cat cat valid_out.txt 2>valid_err.txt
-valid_exit=$?
-echo "Valid format exit code: $valid_exit"
-if [[ $valid_exit -eq 0 ]]; then
-    echo -e "${GREEN}✓ Standard version correctly accepts valid format${NC}"
-    TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-    echo -e "${RED}✗ Standard version should accept valid format${NC}"
-    echo "Error output:"
-    cat valid_err.txt
-    TESTS_FAILED=$((TESTS_FAILED + 1))
-fi
-TESTS_TOTAL=$((TESTS_TOTAL + 1))
-
-# Nettoyage des fichiers de test de format
-rm -f test_heredoc.txt test_multi.txt valid_out.txt
-rm -f heredoc_err.txt multi_err.txt few_args_err.txt many_args_err.txt valid_err.txt
-
-# ============================================================================
-# TESTS STANDARD AVEC VALGRIND
-# ============================================================================
-
-echo -e "\n${BLUE}=== STANDARD VERSION FUNCTIONAL TESTS ===${NC}"
+echo -e "\n${BLUE}=== TESTING STANDARD FUNCTIONALITY ON BONUS VERSION ===${NC}"
 
 # Test basique
 compare_bash_pipex \
-    "Standard: Basic pipe test" \
+    "Bonus: Basic pipe test (standard format)" \
     "< test_input.txt cat | wc -w" \
-    "../pipex test_input.txt cat \"wc -w\" out1.txt"
+    "../pipex test_input.txt cat \"wc -w\" bout1.txt"
 
 # Test avec fichier inexistant
 compare_bash_pipex \
-    "Standard: Nonexistent input file" \
+    "Bonus: Nonexistent input file (standard format)" \
     "< nonexistent.txt cat | wc -l" \
-    "../pipex nonexistent.txt cat \"wc -l\" out2.txt"
+    "../pipex nonexistent.txt cat \"wc -l\" bout2.txt"
 
 # Test avec commande invalide
 compare_bash_pipex \
-    "Standard: Invalid command" \
+    "Bonus: Invalid command (standard format)" \
     "< test_input.txt invalidcmd | cat" \
-    "../pipex test_input.txt invalidcmd cat out3.txt"
+    "../pipex test_input.txt invalidcmd cat bout3.txt"
 
 # Test timing avec sleep
 compare_bash_pipex \
-    "Standard: Parallel execution timing" \
+    "Bonus: Parallel execution timing (standard format)" \
     "< /dev/null sleep 1 | sleep 2" \
-    "../pipex /dev/null \"sleep 1\" \"sleep 2\" out4.txt" \
+    "../pipex /dev/null \"sleep 1\" \"sleep 2\" bout4.txt" \
     "" \
     "" \
     "true"
 
-# Test avec options complexes
-compare_bash_pipex \
-    "Standard: Complex commands" \
-    "< test_multiline.txt grep line | wc -l" \
-    "../pipex test_multiline.txt \"grep line\" \"wc -l\" out5.txt"
+# ============================================================================
+# TESTS BONUS SPÉCIFIQUES - HEREDOC
+# ============================================================================
 
-echo -e "\n${YELLOW}Standard version tests completed!${NC}"
+echo -e "\n${BLUE}=== TESTING BONUS HEREDOC FUNCTIONALITY ===${NC}"
+
+# Test heredoc basique
+compare_bash_pipex \
+    "Bonus: Basic heredoc" \
+    "cat | wc -l" \
+    "../pipex here_doc EOF cat \"wc -l\" heredoc1.txt" \
+    "line1\nline2\nEOF"
+
+# Test heredoc avec append
+echo "existing content" > heredoc_append.txt
+echo -e "new line\nEOF" | ../pipex here_doc EOF cat cat heredoc_append.txt 2>/dev/null
+if grep -q "existing content" heredoc_append.txt && grep -q "new line" heredoc_append.txt; then
+    echo -e "${GREEN}✓ Heredoc append mode works correctly${NC}"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+    echo -e "${RED}✗ Heredoc append mode failed${NC}"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
+TESTS_TOTAL=$((TESTS_TOTAL + 1))
+
+# Nettoyage après test heredoc append
+rm -f heredoc_append.txt 2>/dev/null
+
+# Test heredoc avec delimiter complexe
+compare_bash_pipex \
+    "Bonus: Heredoc with complex delimiter" \
+    "cat | grep test" \
+    "../pipex here_doc END_OF_INPUT cat \"grep test\" heredoc2.txt" \
+    "test line\nother line\nEND_OF_INPUT"
+
+# Test heredoc vide
+compare_bash_pipex \
+    "Bonus: Empty heredoc" \
+    "cat | wc -l" \
+    "../pipex here_doc EMPTY cat \"wc -l\" heredoc3.txt" \
+    "EMPTY"
+
+# Test heredoc avec délimiteurs variés
+compare_bash_pipex \
+    "Bonus: Heredoc with numeric delimiter" \
+    "cat | wc -l" \
+    "../pipex here_doc 123 cat \"wc -l\" heredoc_numeric.txt" \
+    "test data\n123"
+
+compare_bash_pipex \
+    "Bonus: Heredoc with special delimiter" \
+    "cat | grep test" \
+    "../pipex here_doc STOP_HERE cat \"grep test\" heredoc_special.txt" \
+    "test line\nother content\nSTOP_HERE"
+
+compare_bash_pipex \
+    "Bonus: Heredoc with single char delimiter" \
+    "cat | wc -c" \
+    "../pipex here_doc X cat \"wc -c\" heredoc_single.txt" \
+    "hello\nX"
+
+# ============================================================================
+# TESTS BONUS SPÉCIFIQUES - MULTIPLE PIPES
+# ============================================================================
+
+echo -e "\n${BLUE}=== TESTING BONUS MULTIPLE PIPES FUNCTIONALITY ===${NC}"
+
+# Test avec 3 commandes
+compare_bash_pipex \
+    "Bonus: Three commands pipeline" \
+    "< test_multiline.txt cat | grep line | wc -l" \
+    "../pipex test_multiline.txt cat \"grep line\" \"wc -l\" multi1.txt"
+
+# Test avec 4 commandes
+compare_bash_pipex \
+    "Bonus: Four commands pipeline" \
+    "< test_multiline.txt cat | grep line | cat | wc -l" \
+    "../pipex test_multiline.txt cat \"grep line\" cat \"wc -l\" multi2.txt"
+
+# Test multiple pipes avec commandes complexes
+compare_bash_pipex \
+    "Bonus: Multiple pipes with complex commands" \
+    "< test_multiline.txt sort | uniq | grep line | wc -l" \
+    "../pipex test_multiline.txt sort uniq \"grep line\" \"wc -l\" multi3.txt"
+
+# Test de timing pour multiple pipes
+compare_bash_pipex \
+    "Bonus: Multiple pipes timing test" \
+    "< /dev/null sleep 1 | sleep 1 | sleep 1" \
+    "../pipex /dev/null \"sleep 1\" \"sleep 1\" \"sleep 1\" multi_timing.txt" \
+    "" \
+    "" \
+    "true"
+
+# ============================================================================
+# TESTS BONUS AVANCÉS
+# ============================================================================
+
+echo -e "\n${BLUE}=== TESTING BONUS ADVANCED SCENARIOS ===${NC}"
+
+# Test heredoc avec multiple pipes
+echo -e "data1\ndata2\ndata3\nEOF" | ../pipex here_doc EOF cat "grep data" "wc -l" advanced1.txt 2>/dev/null
+if [[ -f advanced1.txt ]] && [[ "$(cat advanced1.txt)" == "3" ]]; then
+    echo -e "${GREEN}✓ Heredoc with multiple pipes works${NC}"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+    echo -e "${RED}✗ Heredoc with multiple pipes failed${NC}"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
+TESTS_TOTAL=$((TESTS_TOTAL + 1))
+
+# Nettoyage après test heredoc advanced
+rm -f advanced1.txt 2>/dev/null
+
+# Test timing pour multiple pipes avec fonction de comparaison
+compare_bash_pipex \
+    "Bonus: Advanced multiple pipes timing" \
+    "< /dev/null sleep 2 | sleep 1 | sleep 1" \
+    "../pipex /dev/null \"sleep 2\" \"sleep 1\" \"sleep 1\" advanced_timing.txt" \
+    "" \
+    "" \
+    "true"
 
 # Nettoyage final
-rm -f out*.txt test_*.txt 2>/dev/null
-# Nettoyer le fichier de test de permissions (restaurer permissions puis supprimer)
-chmod 644 test_perm.txt 2>/dev/null
-rm -f test_perm.txt
+rm -f test_*.txt bout*.txt heredoc*.txt multi*.txt advanced*.txt timing_test.txt multi_timing.txt advanced_timing.txt heredoc_append.txt
+rm -f *.txt here_doc* bash_out_* pipex_out_* bash_err_* pipex_err_* test_input_* valgrind_out_* timing_* 2>/dev/null
 
 # Afficher le résumé final
 print_test_summary
