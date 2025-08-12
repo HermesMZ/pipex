@@ -11,10 +11,14 @@ SRCS = \
 	init.c \
 	parsing.c \
 	command_parser.c \
-	pipex.c \
+	quote_parser.c \
+	command_validation.c \
+	exec.c \
+	pipeline.c \
 	utils.c \
 	debug_utils.c \
 	redirect.c \
+	error_handler.c \
 
 MANDATORY = \
 	main.c \
@@ -22,6 +26,8 @@ MANDATORY = \
 BONUS = \
 	main_bonus.c \
 	here_doc_bonus.c \
+	exec_bonus.c \
+	pipeline_bonus.c \
 
 SRCS_PATH = $(addprefix $(SRCS_DIR)/, $(SRCS))
 MANDATORY_PATH = $(addprefix $(SRCS_DIR)/, $(MANDATORY))

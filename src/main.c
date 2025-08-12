@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:12:12 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/12 14:41:47 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:29:26 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ int	main(int argc, char *argv[], char *envp[])
 	if (!pipex_data)
 		return (1);
 	if (parse_args(pipex_data, argc, argv) < 0)
+	{
 		return (free_pipex(pipex_data), 1);
+	}
 	exit_status = pipex(pipex_data);
 	free_pipex(pipex_data);
 	if (exit_status == -1)

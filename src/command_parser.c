@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 16:45:00 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/05 16:42:37 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:19:22 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,48 +41,6 @@ static int	count_args(char *cmd)
 	return (count);
 }
 
-static int	calculate_arg_length(char *cmd, int start)
-{
-	int	i;
-	int	len;
-	int	in_quotes;
-
-	i = start;
-	len = 0;
-	in_quotes = 0;
-	while (cmd[i] && (cmd[i] != ' ' || in_quotes))
-	{
-		if (cmd[i] == '\'' && !in_quotes)
-			in_quotes = 1;
-		else if (cmd[i] == '\'' && in_quotes)
-			in_quotes = 0;
-		else
-			len++;
-		i++;
-	}
-	return (len);
-}
-
-static void	copy_arg_content(char *cmd, int *i, char *result)
-{
-	int	j;
-	int	in_quotes;
-
-	j = 0;
-	in_quotes = 0;
-	while (cmd[*i] && (cmd[*i] != ' ' || in_quotes))
-	{
-		if (cmd[*i] == '\'' && !in_quotes)
-			in_quotes = 1;
-		else if (cmd[*i] == '\'' && in_quotes)
-			in_quotes = 0;
-		else
-			result[j++] = cmd[*i];
-		(*i)++;
-	}
-	result[j] = '\0';
-}
-
 static char	*extract_arg(t_lalloc *allocator, char *cmd, int *i)
 {
 	int		start;
@@ -101,16 +59,28 @@ static char	*extract_arg(t_lalloc *allocator, char *cmd, int *i)
 	return (result);
 }
 
-char	**parse_command_with_quotes(t_lalloc *allocator, char *cmd)
+static char	**handle_empty_command(t_lalloc *allocator)
 {
 	char	**args;
-	int		arg_count;
+
+	args = ft_my_malloc(allocator, sizeof(char *) * 2);
+	if (!args)
+		return (NULL);
+	args[0] = ft_my_malloc(allocator, 1);
+	if (!args[0])
+		return (NULL);
+	args[0][0] = '\0';
+	args[1] = NULL;
+	return (args);
+}
+
+static char	**allocate_and_fill_args(t_lalloc *allocator, char *cmd,
+		int arg_count)
+{
+	char	**args;
 	int		i;
 	int		j;
 
-	if (!cmd || !*cmd)
-		return (NULL);
-	arg_count = count_args(cmd);
 	args = ft_my_malloc(allocator, sizeof(char *) * (arg_count + 1));
 	if (!args)
 		return (NULL);
@@ -125,4 +95,18 @@ char	**parse_command_with_quotes(t_lalloc *allocator, char *cmd)
 	}
 	args[j] = NULL;
 	return (args);
+}
+
+char	**parse_command_with_quotes(t_lalloc *allocator, char *cmd)
+{
+	int	arg_count;
+
+	if (!cmd || !*cmd)
+		return (NULL);
+	if (!validate_quotes(cmd))
+		return (NULL);
+	arg_count = count_args(cmd);
+	if (arg_count == 0)
+		return (handle_empty_command(allocator));
+	return (allocate_and_fill_args(allocator, cmd, arg_count));
 }

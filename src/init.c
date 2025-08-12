@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zoum <zoum@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:35:13 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/11 18:43:57 by zoum             ###   ########.fr       */
+/*   Updated: 2025/08/12 16:50:42 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_pipex	*init_pipex(t_pipex *pipex, char *envp[])
 	pipex->cmds = NULL;
 	pipex->path = NULL;
 	pipex->envp = envp;
+	pipex->last_pid = 0;
 	pipex->allocator = init_allocator();
 	if (!pipex->allocator)
 		return (NULL);
