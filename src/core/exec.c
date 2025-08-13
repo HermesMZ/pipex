@@ -6,12 +6,11 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 15:45:00 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/12 18:05:56 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:56:39 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include <signal.h>
 
 int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 {
