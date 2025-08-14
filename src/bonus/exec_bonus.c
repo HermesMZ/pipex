@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 15:20:00 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/12 18:02:59 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/14 10:54:25 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ int	exec_child_bonus(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 {
 	int	check_result;
 
+	check_result = check_command(pipex, pipex->cmds[i][0], i);
+	handle_command_error(pipex, check_result, i);
 	setup_input_redirect(in_fd);
 	if (setup_heredoc_redirect(pipex, i, pipe_fd, pipex->outfile) < 0)
 	{
 		free_pipex(pipex);
 		exit(1);
 	}
-	check_result = check_command(pipex, pipex->cmds[i][0], i);
-	handle_command_error(pipex, check_result, i);
 	execve(pipex->cmds[i][0], pipex->cmds[i], pipex->envp);
 	perror("execve");
 	free_pipex(pipex);
