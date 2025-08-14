@@ -6,7 +6,7 @@
 /*   By: mzimeris <mzimeris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 15:45:00 by mzimeris          #+#    #+#             */
-/*   Updated: 2025/08/14 10:54:28 by mzimeris         ###   ########.fr       */
+/*   Updated: 2025/08/14 11:11:50 by mzimeris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ int	exec_child(t_pipex *pipex, int i, int in_fd, int pipe_fd[2])
 	int	check_result;
 
 	check_result = check_command(pipex, pipex->cmds[i][0], i);
+	if (check_result < 0)
+	{
+		if (in_fd > 0)
+			close(in_fd);
+		if (pipe_fd[0] > 0)
+			close(pipe_fd[0]);
+		if (pipe_fd[1] > 0)
+			close(pipe_fd[1]);
+	}
 	handle_command_error(pipex, check_result, i);
 	setup_input_redirect(in_fd);
 	if (setup_output_redirect(pipex, i, pipe_fd, pipex->outfile) < 0)

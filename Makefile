@@ -42,15 +42,19 @@ BONUS_OBJS = $(BONUS_SRCS_PATH:$(BONUS_DIR)/%.c=$(OBJS_DIR)/bonus/%.o)
 
 INCLUDES = -I $(INCLUDES_DIR) -I $(LIBFT_DIR)/includes
 
+ifdef BONUS
+OBJS = $(CORE_OBJS) $(BONUS_OBJS)
+else
+OBJS = $(CORE_OBJS) $(MANDATORY_OBJS)
+endif
+
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(CORE_OBJS) $(MANDATORY_OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(CORE_OBJS) $(MANDATORY_OBJS) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 
-bonus: $(LIBFT) $(NAME)_bonus
-
-$(NAME)_bonus: $(CORE_OBJS) $(BONUS_OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(CORE_OBJS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
+bonus:
+	$(MAKE) BONUS=1
 
 $(OBJS_DIR)/core/%.o: $(CORE_DIR)/%.c | $(OBJS_DIR)/core
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -83,13 +87,8 @@ fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 
-fclean_bonus: clean
-	@echo "Nettoyage de $(NAME), libft et fichiers bonus..."
-	@rm -f $(NAME)
-	@$(MAKE) -C $(LIBFT_DIR) fclean
-
 re: fclean all
 
-re_bonus: fclean_bonus bonus
+re_bonus: fclean bonus
 
-.PHONY: all bonus clean fclean fclean_bonus re re_bonus
+.PHONY: all bonus clean fclean re re_bonus
